@@ -6,7 +6,7 @@ require("dotenv").config();
 // register
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role,address } = req.body;
+    const { name, email, password, role, address } = req.body;
 
     //  validation
     if (!name || !email || !password || !address) {
