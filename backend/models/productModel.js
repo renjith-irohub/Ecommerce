@@ -41,6 +41,15 @@ const productSchema = new mongoose.Schema({
   soldcount: {
     type: Number,
     default: 0,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  instock: {
+    type: Number,
+    default: 0,
+    required: true,
   }
 });
 

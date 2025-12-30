@@ -3,9 +3,9 @@ import Product from "../models/productModel.js";
 import uploadFromBuffer, { uploadMultipleFromBuffer, deleteFromCloudinary } from "../utils/cloudinaryUpload.js";
 
 export const createProduct = asynchandler(async (req, res) => {
-  const { pname, price, category, soldcount } = req.body;
+  const { pname, price, category, soldcount, description, instock } = req.body;
 
-  if (!pname || !price || !category) {
+  if (!pname || !price || !category || !description || !instock) {
     return res.status(400).json({ message: "These are required fields" });
   }
 
@@ -36,6 +36,8 @@ export const createProduct = asynchandler(async (req, res) => {
     cloudinary_id: primaryCloudinaryId,
     cloudinary_ids: cloudinaryIds,
     soldcount: soldcount || 0,
+    description,
+    instock: instock || 0,
   });
 
   res.status(201).json({
@@ -63,7 +65,7 @@ export const readproduct = asynchandler(async (req, res) => {
 
 
 export const updateProduct = asynchandler(async (req, res) => {
-  const { pname, price, category, removeImageIds } = req.body;
+  const { pname, price, category, removeImageIds, description, instock } = req.body;
 
   const product = await Product.findById(req.params.id);
 
@@ -113,6 +115,8 @@ export const updateProduct = asynchandler(async (req, res) => {
   if (pname) product.pname = pname;
   if (price) product.price = price;
   if (category) product.category = category;
+  if (description) product.description = description;
+  if (instock) product.instock = instock;
 
   const updatedProduct = await product.save();
 
