@@ -4,7 +4,7 @@ export const addToCart = async (req, res) => {
   try {
     const { productId, name, price, image, size, quantity } = req.body;
 
-    if (!productId || !name || !price || !size) {
+    if (!productId || !name || !price) {
       return res.status(400).json({ message: "Missing fields" });
     }
 
