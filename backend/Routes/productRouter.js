@@ -4,9 +4,9 @@ import * as productController from "../Controllers/productController.js";
 import upload from "../Middleware/multer.js";
 import { protect, authorize } from "../Middleware/isAuth.js";
 
-router.post("/create", protect, authorize("admin"), upload.array("images", 5), productController.createProduct);
+router.post("/create", protect, authorize("admin"), upload.fields([{ name: "images", maxCount: 5 }, { name: "video", maxCount: 1 }]), productController.createProduct);
 router.get("/all", productController.readproduct);
-router.put("/update/:id", protect, authorize("admin"), upload.array("images", 5), productController.updateProduct);
+router.put("/update/:id", protect, authorize("admin"), upload.fields([{ name: "images", maxCount: 5 }, { name: "video", maxCount: 1 }]), productController.updateProduct);
 router.delete("/delete/:id", protect, authorize("admin"), productController.deleteproduct);
 router.get("/:id", productController.getProductById);
 

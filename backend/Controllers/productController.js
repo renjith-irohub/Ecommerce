@@ -3,7 +3,7 @@ import Product from "../models/productModel.js";
 import uploadFromBuffer, { uploadMultipleFromBuffer, deleteFromCloudinary } from "../utils/cloudinaryUpload.js";
 
 export const createProduct = asynchandler(async (req, res) => {
-  const { pname, price, category, soldcount, description, instock } = req.body;
+  const { pname, price, category, soldcount, description, instock, discount } = req.body;
 
   if (!pname || !price || !category || !description || !instock) {
     return res.status(400).json({ message: "These are required fields" });
@@ -11,15 +11,28 @@ export const createProduct = asynchandler(async (req, res) => {
 
   let imageUrls = [];
   let cloudinaryIds = [];
+  let videoUrl = null;
+  let videoCloudinaryId = null;
 
-  // Handle multiple files upload
-  if (req.files && req.files.length > 0) {
+  // Handle multiple images upload
+  if (req.files && req.files.images && req.files.images.length > 0) {
     try {
-      const uploadResults = await uploadMultipleFromBuffer(req.files, "product_uploads");
+      const uploadResults = await uploadMultipleFromBuffer(req.files.images, "product_uploads");
       imageUrls = uploadResults.map(result => result.secure_url);
       cloudinaryIds = uploadResults.map(result => result.public_id);
     } catch (error) {
       return res.status(500).json({ message: "Failed to upload images", error: error.message });
+    }
+  }
+
+  // Handle video upload
+  if (req.files && req.files.video && req.files.video.length > 0) {
+    try {
+      const videoResult = await uploadFromBuffer(req.files.video[0].buffer, "product_videos");
+      videoUrl = videoResult.secure_url;
+      videoCloudinaryId = videoResult.public_id;
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to upload video", error: error.message });
     }
   }
 
@@ -38,6 +51,9 @@ export const createProduct = asynchandler(async (req, res) => {
     soldcount: soldcount || 0,
     description,
     instock: instock || 0,
+    discount: discount || 0,
+    video: videoUrl,
+    video_cloudinary_id: videoCloudinaryId,
   });
 
   res.status(201).json({
@@ -65,7 +81,7 @@ export const readproduct = asynchandler(async (req, res) => {
 
 
 export const updateProduct = asynchandler(async (req, res) => {
-  const { pname, price, category, removeImageIds, description, instock } = req.body;
+  const { pname, price, category, removeImageIds, description, instock, discount } = req.body;
 
   const product = await Product.findById(req.params.id);
 
@@ -91,9 +107,9 @@ export const updateProduct = asynchandler(async (req, res) => {
   }
 
   // Handle new image uploads
-  if (req.files && req.files.length > 0) {
+  if (req.files && req.files.images && req.files.images.length > 0) {
     try {
-      const uploadResults = await uploadMultipleFromBuffer(req.files, "product_uploads");
+      const uploadResults = await uploadMultipleFromBuffer(req.files.images, "product_uploads");
       const newImageUrls = uploadResults.map(result => result.secure_url);
       const newCloudinaryIds = uploadResults.map(result => result.public_id);
 
@@ -102,6 +118,21 @@ export const updateProduct = asynchandler(async (req, res) => {
       product.cloudinary_ids = [...product.cloudinary_ids, ...newCloudinaryIds];
     } catch (error) {
       return res.status(500).json({ message: "Failed to upload new images", error: error.message });
+    }
+  }
+
+  // Handle new video upload
+  if (req.files && req.files.video && req.files.video.length > 0) {
+    try {
+      // Delete old video if exists
+      if (product.video_cloudinary_id) {
+        await deleteFromCloudinary(product.video_cloudinary_id);
+      }
+      const videoResult = await uploadFromBuffer(req.files.video[0].buffer, "product_videos");
+      product.video = videoResult.secure_url;
+      product.video_cloudinary_id = videoResult.public_id;
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to upload new video", error: error.message });
     }
   }
 
@@ -117,6 +148,7 @@ export const updateProduct = asynchandler(async (req, res) => {
   if (category) product.category = category;
   if (description) product.description = description;
   if (instock) product.instock = instock;
+  if (discount !== undefined) product.discount = discount;
 
   const updatedProduct = await product.save();
 
@@ -138,7 +170,15 @@ export const deleteproduct = asynchandler(async (req, res) => {
       await Promise.all(deletePromises);
     } catch (error) {
       console.error("Error deleting images from Cloudinary:", error);
-      // Continue with product deletion even if Cloudinary deletion fails
+    }
+  }
+
+  // Delete video from Cloudinary
+  if (product.video_cloudinary_id) {
+    try {
+      await deleteFromCloudinary(product.video_cloudinary_id);
+    } catch (error) {
+      console.error("Error deleting video from Cloudinary:", error);
     }
   }
 

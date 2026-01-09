@@ -1,78 +1,6 @@
-// import React, { useContext, useEffect, useState } from "react";
-// import { ShopContext } from "../context/ShopContext";
-// import Title from "./Title";
-// import { motion } from "framer-motion";
-
-// const BestSeller = () => {
-//   const { products } = useContext(ShopContext);
-//   const [bestSeller, setBestSeller] = useState([]);
-
-//   useEffect(() => {
-//     if (Array.isArray(products)) {
-//       const bestProducts = products
-//         .filter((item) => item.soldCount > 0) 
-//         .sort((a, b) => b.soldCount - a.soldCount) 
-//         .slice(0, 5); 
-
-//       setBestSeller(bestProducts);
-//     }
-//   }, [products]);
-
-//   if (!Array.isArray(products)) {
-//     return (
-//       <div className="text-center py-10 text-gray-500"></div>
-//     );
-//   }
-
-//   return (
-//     <section className="my-16 px-6 md:px-12">
-//       <div className="text-center mb-10">
-//         <Title text1="BEST" text2="SELLERS" />
-//         <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base mt-3">
-//           Our top-selling products, loved by customers worldwide!
-//         </p>
-//       </div>
-
-//       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-//         {bestSeller.length > 0 ? (
-//           bestSeller.map((item, index) => (
-//             <motion.div
-//               key={item._id || index}
-//               initial={{ opacity: 0, y: 40 }}
-//               animate={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 0.4, delay: index * 0.1 }}
-//               className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all"
-//             >
-//               <img
-//                 src={item.image}
-//                 alt={item.name}
-//                 className="w-full h-48 object-cover"
-//               />
-//               <div className="p-4 text-center">
-//                 <h3 className="text-sm font-semibold text-gray-800">{item.name}</h3>
-//                 <p className="text-black-500 font-medium mt-1">${item.price}</p>
-//                 <p className="text-xs text-gray-500 mt-1">
-//                   Sold: {item.soldCount}
-//                 </p>
-//               </div>
-//             </motion.div>
-//           ))
-//         ) : (
-//           <p className="col-span-full text-center text-gray-500">
-//             No best sellers found.
-//           </p>
-//         )}
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default BestSeller;
-
-
 import React, { useContext, useEffect, useState } from "react";
-import { ShopContext } from "../context/ShopContext";
-import Title from "./Title";
+import { ShopContext } from "../../context/ShopContext";
+import Title from "../common/Title";
 import { motion } from "framer-motion";
 
 const BestSeller = () => {
@@ -164,7 +92,6 @@ const BestSeller = () => {
               className="group relative bg-white rounded-3xl overflow-hidden shadow-lg cursor-pointer"
               style={{ transformStyle: "preserve-3d" }}
             >
-              {/* Image with parallax-like zoom */}
               <div className="relative overflow-hidden">
                 <motion.img
                   src={item.image}
@@ -173,14 +100,12 @@ const BestSeller = () => {
                   whileHover={{ scale: 1.15 }}
                   transition={{ duration: 0.8 }}
                 />
-                {/* Shiny overlay on hover */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white opacity-0"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 0.3 }}
                   transition={{ duration: 0.6 }}
                 />
-                {/* Rank Badge */}
                 {index < 3 && (
                   <motion.div
                     initial={{ scale: 0 }}
@@ -193,7 +118,6 @@ const BestSeller = () => {
                 )}
               </div>
 
-              {/* Content */}
               <motion.div
                 className="p-5 text-center bg-gradient-to-b from-transparent to-gray-50"
                 initial={{ y: 20, opacity: 0 }}
@@ -203,18 +127,26 @@ const BestSeller = () => {
                 <h3 className="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300 line-clamp-2">
                   {item.name}
                 </h3>
-                <motion.p
-                  className="text-2xl font-extrabold mt-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
-                  whileHover={{ scale: 1.1 }}
-                >
-                  ${item.price}
-                </motion.p>
+                <div className="flex flex-col items-center mt-2">
+                  <div className="flex items-center gap-2">
+                    <p className="text-2xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      ₹{item.discount > 0 ? item.discount : item.price}
+                    </p>
+                    {item.discount > 0 && (
+                      <p className="text-sm text-gray-400 line-through">₹{item.price}</p>
+                    )}
+                  </div>
+                  {item.discount > 0 && (
+                    <span className="text-green-600 text-xs font-bold mt-1">
+                      {item.discountPercentage}% OFF
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-gray-500 mt-2 flex items-center justify-center gap-1">
                   <span className="text-amber-500">Star</span> {item.soldCount} sold
                 </p>
               </motion.div>
 
-              {/* Floating particles effect on hover */}
               <motion.div
                 className="absolute inset-0 pointer-events-none"
                 initial={{ opacity: 0 }}

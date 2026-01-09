@@ -1,134 +1,13 @@
-// import React from "react";
-// import Title from "../Components/Title";
-// import aboutImg from "../assets/Shop2.jpg";
-// import {
-//   FaFacebookF,
-//   FaTwitter,
-//   FaInstagram,
-//   FaLinkedinIn,
-// } from "react-icons/fa";
-
-// const About = () => {
-//   return (
-//     <>
-//       <section className="py-12 px-6 md:px-16 bg-gray-50 text-gray-700">
-//         <div className="text-center mb-12">
-//           <Title text={"ABOUT"} text2={"ABOUT US"} />
-//           <p className="mt-3 text-base text-gray-500">
-//             Discover who we are and what drives our passion for innovation
-//           </p>
-//         </div>
-
-        
-//         <div className="flex flex-col md:flex-row items-center gap-12">
-         
-//           <div className="w-full md:w-1/2 flex justify-center">
-//             <img
-//               src={aboutImg}
-//               alt="About us"
-//               className="rounded-2xl shadow-lg w-full md:max-w-[500px] object-cover hover:scale-105 transition-all duration-500"
-//             />
-//           </div>
-
-//           <div className="md:w-1/2 flex flex-col gap-6 leading-relaxed">
-//             <p>
-//               <span className="font-semibold text-gray-800">Forever</span> was
-//               born out of a passion for innovation and a desire to redefine
-//               modern fashion through creativity, comfort, and sustainability.
-//             </p>
-//             <p>
-//               Since our launch, we've been on a mission to design styles that
-//               empower confidence and inspire individuality in every person. Each
-//               collection we drop is built around self-expression and
-//               authenticity—because fashion should feel like *you*.
-//             </p>
-//             <p>
-//               We're not just a brand; we're a movement built on bold ideas,
-//               conscious design, and endless creativity.
-//             </p>
-//           </div>
-//         </div>
-//       </section>
-
-     
-//       <footer className="bg-gray-900 text-gray-200 mt-12">
-//         <div className="max-w-7xl mx-auto py-12 px-6 md:px-16 grid md:grid-cols-3 gap-8">
-//           <div>
-//             <h3 className="text-xl font-semibold mb-4">Forever</h3>
-//             <p className="text-gray-400">
-//               Redefining fashion through creativity, comfort, and
-//               sustainability. Join our journey of self-expression and bold
-//               ideas.
-//             </p>
-//           </div>
-
-//           <div>
-//             <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
-//             <ul className="space-y-2 text-gray-400">
-//               <li>
-//                 <a href="/about" className="hover:text-white transition">
-//                   About Us
-//                 </a>
-//               </li>
-//               <li>
-//                 <a href="/collection" className="hover:text-white transition">
-//                   Shop
-//                 </a>
-//               </li>
-//               <li>
-//                 <a href="/contact" className="hover:text-white transition">
-//                   Contact
-//                 </a>
-//               </li>
-//               <li>
-//                 <a href="/" className="hover:text-white transition">
-//                   FAQ
-//                 </a>
-//               </li>
-//             </ul>
-//           </div>
-
-//           <div>
-//             <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
-//             <div className="flex space-x-4">
-//               <a href="#" className="hover:text-white transition">
-//                 <FaFacebookF />
-//               </a>
-//               <a href="#" className="hover:text-white transition">
-//                 <FaTwitter />
-//               </a>
-//               <a href="#" className="hover:text-white transition">
-//                 <FaInstagram />
-//               </a>
-//               <a href="#" className="hover:text-white transition">
-//                 <FaLinkedinIn />
-//               </a>
-//             </div>
-//           </div>
-//         </div>
-
-        
-//         <div className="border-t border-gray-800 py-4 text-center text-gray-500 text-sm">
-//           © {new Date().getFullYear()} Forever. All rights reserved.
-//         </div>
-//       </footer>
-//     </>
-//   );
-// };
-
-// export default About;
 import React from "react";
 import { motion } from "framer-motion";
-import Title from "../Components/Title";
-import aboutImg from "../assets/Shop2.jpg";
+import Title from "../../components/common/Title";
+import aboutImg from "../../assets/Shop2.jpg";
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaHeart, FaLeaf, FaStar } from "react-icons/fa";
 
 const About = () => {
   return (
     <>
-      {/* HERO SECTION - FULLSCREEN ELEGANCE */}
       <section className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50 overflow-hidden">
-        {/* Floating Decorative Orbs */}
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
             animate={{ y: [0, -40, 0], x: [0, 30, 0] }}
@@ -143,7 +22,6 @@ const About = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-6 py-24 lg:py-32">
-          {/* Animated Title */}
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -161,9 +39,7 @@ const About = () => {
             </motion.p>
           </motion.div>
 
-          {/* Main Content Grid */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* LEFT: Image with Luxury Effects */}
             <motion.div
               initial={{ opacity: 0, x: -80 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -179,7 +55,6 @@ const About = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60"></div>
 
-                {/* Floating Elegant Badge */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}
@@ -192,7 +67,6 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* RIGHT: Powerful Text + Values */}
             <motion.div
               initial={{ opacity: 0, x: 80 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -222,7 +96,6 @@ const About = () => {
                 </p>
               </div>
 
-              {/* Values Icons */}
               <div className="grid grid-cols-3 gap-8 mt-12">
                 {[
                   { icon: FaLeaf, label: "Sustainable", color: "from-emerald-500 to-teal-600" },
@@ -249,11 +122,9 @@ const About = () => {
         </div>
       </section>
 
-      {/* LUXURY FOOTER */}
       <footer className="bg-gradient-to-b from-gray-900 to-black text-gray-300 py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-16">
           <div className="grid md:grid-cols-4 gap-12">
-            {/* Brand */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -267,7 +138,6 @@ const About = () => {
               </p>
             </motion.div>
 
-            {/* Links */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -287,7 +157,6 @@ const About = () => {
               </ul>
             </motion.div>
 
-            
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -310,9 +179,7 @@ const About = () => {
               </div>
             </motion.div>
 
-            
             <motion.div
-
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
@@ -324,7 +191,6 @@ const About = () => {
               </p>
             </motion.div>
           </div>
-
 
           <motion.div
             initial={{ opacity: 0 }}

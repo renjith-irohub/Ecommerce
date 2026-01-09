@@ -34,7 +34,7 @@
 
 //   return (
 //     <section className="bg-white py-16 px-6 sm:px-10">
-      
+
 //       <motion.div
 //         className="text-center mb-12"
 //         initial={{ opacity: 0, y: -20 }}
@@ -84,14 +84,14 @@
 //         )}
 //       </div>
 
-     
+
 //       <motion.div
 //         className="text-center mt-16 text-gray-500 text-sm border-t pt-6"
 //         initial={{ opacity: 0 }}
 //         animate={{ opacity: 1 }}
 //         transition={{ delay: 0.6 }}
 //       >
-        
+
 //         <p>
 //           Designed with  by<Link to='/'><span className="text-indigo-600 font-semibold">MyShop</span> —</Link>   
 //           bringing fashion closer to you.
@@ -245,12 +245,21 @@ function Collection() {
                   {p.pname}
                 </motion.h3>
 
-                <motion.p
-                  className="text-2xl font-extrabold mt-3 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
-                  whileHover={{ scale: 1.1 }}
-                >
-                  ₹{p.price}
-                </motion.p>
+                <div className="flex flex-col items-center mt-3">
+                  <div className="flex items-center gap-2">
+                    <p className="text-2xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      ₹{p.discount > 0 ? p.discount : p.price}
+                    </p>
+                    {p.discount > 0 && (
+                      <p className="text-sm text-gray-400 line-through">₹{p.price}</p>
+                    )}
+                  </div>
+                  {p.discount > 0 && (
+                    <span className="text-green-600 text-xs font-bold mt-1">
+                      {p.discountPercentage}% OFF
+                    </span>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))
@@ -261,7 +270,7 @@ function Collection() {
         )}
       </motion.div>
 
-      
+
       <motion.footer
         className="text-center mt-24 pt-12 border-t border-white/30"
         initial={{ opacity: 0, y: 40 }}

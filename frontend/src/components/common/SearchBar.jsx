@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ShopContext } from "../context/ShopContext";
+import { ShopContext } from "../../context/ShopContext";
 import { useLocation } from "react-router-dom";
 
 const SearchBar = () => {
@@ -8,7 +8,7 @@ const SearchBar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    
+
     if (location.pathname.includes("collection")) {
       setVisible(true);
     } else {
@@ -16,7 +16,7 @@ const SearchBar = () => {
     }
   }, [location]);
 
-  
+
 
 
 

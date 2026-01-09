@@ -1,16 +1,12 @@
-// !
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import woman from "../assets/woman.jpg";
+import woman from "../../assets/woman.jpg";
 
 const Mainpage = () => {
   return (
     <>
-     
       <div className="relative min-h-screen w-full overflow-hidden bg-black flex items-center justify-center">
-        
-        
         <div className="absolute inset-0 -z-10">
           <motion.div
             animate={{
@@ -31,20 +27,15 @@ const Mainpage = () => {
           />
         </div>
 
-      
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-        
-        
+
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
-          
-         
           <motion.div
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
             className="text-left space-y-8 lg:w-1/2"
           >
-            {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -57,7 +48,6 @@ const Mainpage = () => {
               </p>
             </motion.div>
 
-           
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -70,18 +60,16 @@ const Mainpage = () => {
               <span className="block text-white drop-shadow-2xl">Arrivals</span>
             </motion.h1>
 
-           
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
               className="text-lg md:text-xl text-gray-200 font-light max-w-lg leading-relaxed"
             >
-              Discover timeless elegance crafted for the modern soul. 
+              Discover timeless elegance crafted for the modern soul.
               New drops every week — exclusively for you.
             </motion.p>
 
-            {/* CTA Button */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -113,7 +101,6 @@ const Mainpage = () => {
             </motion.div>
           </motion.div>
 
-         
           <motion.div
             initial={{ opacity: 0, x: 100, rotate: 10 }}
             animate={{ opacity: 1, x: 0, rotate: 0 }}
@@ -122,7 +109,6 @@ const Mainpage = () => {
             className="lg:w-1/2 flex justify-center"
           >
             <div className="relative group">
-             
               <motion.img
                 src={woman}
                 alt="Latest Collection"
@@ -131,7 +117,6 @@ const Mainpage = () => {
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -141,7 +126,6 @@ const Mainpage = () => {
                 NEW
               </motion.div>
 
-              
               <motion.div
                 animate={{ opacity: [0.4, 0.8, 0.4] }}
                 transition={{ duration: 4, repeat: Infinity }}
@@ -151,7 +135,6 @@ const Mainpage = () => {
           </motion.div>
         </div>
 
-       
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -172,7 +155,6 @@ const Mainpage = () => {
         </motion.div>
       </div>
 
-      
       <style jsx>{`
         @keyframes gradient {
           0% { background-position: 0% 50%; }
@@ -189,4 +171,3 @@ const Mainpage = () => {
 };
 
 export default Mainpage;
-

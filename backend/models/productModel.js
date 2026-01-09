@@ -50,9 +50,27 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     required: true,
+  },
+  discount: {
+    type: Number,
+    default: 0,
+  },
+  video: {
+    type: String,
+  },
+  video_cloudinary_id: {
+    type: String,
   }
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-
+productSchema.virtual('discountPercentage').get(function () {
+  if (this.price > 0 && this.discount > 0 && this.discount < this.price) {
+    return Math.round(((this.price - this.discount) / this.price) * 100);
+  }
+  return 0;
+});
 
 export default mongoose.model("product", productSchema);

@@ -1,28 +1,27 @@
 import React from 'react'
-import {Routes,Route, Router} from 'react-router-dom'
-import Home from './Pages/Home'
-import Collection from './Pages/Collection'
-import Contact from './Pages/Contact'
-import Product from './Pages/Product'
-import Navbar from './Components/Navbar'
-import About from './Pages/About'
-import Login from './Pages/Login'
-import Register from './Pages/Register'
-import SearchBar from './Components/SearchBar'
-import AdminDashboard from './Pages/AdminDashboard'
-import AuthPage from './Pages/Login'
-import LatestCollection from './Components/LatestCollection'
-import CartPage from './Pages/CartPage'
-import Logout from './Pages/Logout'
-import OrderDetails from './Pages/OrderDetails'
-import Placeorder from './Pages/PlaceOrder'
-import ProtectedRoute from './Components/ProtectedRoute'
+import { Routes, Route, Router } from 'react-router-dom'
+import Home from './pages/shop/Home'
+import Collection from './pages/shop/Collection'
+import Contact from './pages/shop/Contact'
+import Product from './pages/shop/Product'
+import Navbar from './components/layout/Navbar'
+import About from './pages/shop/About'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import SearchBar from './components/common/SearchBar'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AuthPage from './pages/auth/Login'
+import LatestCollection from './components/product/LatestCollection'
+import CartPage from './pages/shop/CartPage'
+import Logout from './pages/auth/Logout'
+import OrderDetails from './pages/shop/OrderDetails'
+import Placeorder from './pages/shop/PlaceOrder'
+import ProtectedRoute from './components/common/ProtectedRoute'
+import Pagenotfound from './pages/error/Pagenotfound'
+import ReportPage from './pages/admin/ReportPage'
+import ProductEdit from './components/product/ProductEdit'
 import { useNavigate } from "react-router-dom";
-import Pagenotfound from './Pages/Pagenotfound'
 import { useSelector } from 'react-redux'
-
-import ReportPage from './Components/ReportPage'
-import ProductEdit from './Components/ProductEdit'
 
 
 
@@ -35,51 +34,51 @@ import ProductEdit from './Components/ProductEdit'
 
 
 const App = () => {
-  const user=useSelector((state)=>state.auth.user)
- 
-  
+  const user = useSelector((state) => state.auth.user)
+
+
   return (
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
-    {user?.role=="user"&&<Navbar/>}
-     
+      {user?.role == "user" && <Navbar />}
+
       <SearchBar />
       <Routes>
-          
-          <Route path='/collection' element={<Collection/>}/>
-          <Route path='/about' element={<About/>}/>
-          <Route path='/contact' element={<Contact/>}/>
-          <Route path='/product/:productId' element={<Product/>}/>
-          <Route path="/register" element={<Register />} />
-          <Route path='/authpage' element={<AuthPage/>} />
-          <Route path='/latestCollection' element={<LatestCollection/>}/>
-          <Route path='/cart' element={<CartPage/>}/>
-          <Route path='/logout' element={<Logout/>}/>
-          <Route path='/order' element={<OrderDetails/>}/>
-          <Route path="/login" element={<Login />} />
-          <Route path="/placeOrder" element={<Placeorder/>}/>
-          <Route path="/report" element={<ReportPage/>}/>
-          <Route path="/edit" element={<ProductEdit/>}/>
-          
 
-          {/* protect All logged in users */}
-          <Route path='/' element={
-            <ProtectedRoute>
+        <Route path='/collection' element={<Collection />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/product/:productId' element={<Product />} />
+        <Route path="/register" element={<Register />} />
+        <Route path='/authpage' element={<AuthPage />} />
+        <Route path='/latestCollection' element={<LatestCollection />} />
+        <Route path='/cart' element={<CartPage />} />
+        <Route path='/logout' element={<Logout />} />
+        <Route path='/order' element={<OrderDetails />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/placeOrder" element={<Placeorder />} />
+        <Route path="/report" element={<ReportPage />} />
+        <Route path="/edit" element={<ProductEdit />} />
 
-              <Home/>
 
-            </ProtectedRoute>}
-          />
+        {/* protect All logged in users */}
+        <Route path='/' element={
+          <ProtectedRoute>
 
-          {/* admin */}
-           <Route path='/admin' element={
-            <ProtectedRoute role="admin">
-              
-              <AdminDashboard/>
+            <Home />
 
-            </ProtectedRoute>
-            }/>
-          
-         <Route path='/not-authorized' element={<Pagenotfound/>}/>
+          </ProtectedRoute>}
+        />
+
+        {/* admin */}
+        <Route path='/admin' element={
+          <ProtectedRoute role="admin">
+
+            <AdminDashboard />
+
+          </ProtectedRoute>
+        } />
+
+        <Route path='/not-authorized' element={<Pagenotfound />} />
 
       </Routes>
     </div>

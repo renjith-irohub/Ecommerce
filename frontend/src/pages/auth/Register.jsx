@@ -2,12 +2,12 @@ import { useDispatch } from 'react-redux';
 import { useMutation } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {  useNavigate } from 'react-router-dom';
-import { registerUserAPI } from '../services/userServices';
+import { useNavigate } from 'react-router-dom';
+import { registerUserAPI } from '../../services/userServices';
 
 const Register = () => {
     const dispatch = useDispatch();
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const registerMutation = useMutation({
         mutationFn: registerUserAPI,
@@ -18,19 +18,20 @@ const Register = () => {
             name: '',
             email: '',
             password: '',
-            address:'',
+            address: '',
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
             email: Yup.string().email('Invalid email').required('Email is required'),
             password: Yup.string().min(6, 'Minimum 6 characters').required('Password is required'),
-            address:Yup.string().min(10, 'Minimum 10 characters').required('address is required')   }),
+            address: Yup.string().min(10, 'Minimum 10 characters').required('address is required')
+        }),
         onSubmit: async (values) => {
             try {
-                const data =await  registerMutation.mutateAsync(values);
+                const data = await registerMutation.mutateAsync(values);
                 dispatch(registerUserAPI(data));
                 navigate('/')
-               
+
 
             } catch (error) {
                 alert(error.response?.data?.message || "Login failed");
@@ -75,7 +76,7 @@ const Register = () => {
             />
             {formik.touched.password && formik.errors.password && <div className="text-red-500 text-sm">{formik.errors.password}</div>}
 
-             <input
+            <input
                 type="text"
                 name="address"
                 placeholder="Address"
@@ -87,18 +88,18 @@ const Register = () => {
             {formik.touched.address && formik.errors.address && (
                 <div className="text-red-500 text-sm">{formik.errors.address}</div>
             )}
-            
-           
+
+
             <button type="submit" className="bg-green-500 text-white p-2 rounded" disabled={registerMutation.isLoading}>
                 {registerMutation.isLoading ? 'Registering...' : 'Register'}
             </button>
-            
 
-           
-            
+
+
+
         </form>
     );
 };
 
-export default Register;  
+export default Register;
 

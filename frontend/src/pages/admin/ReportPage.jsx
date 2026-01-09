@@ -16,7 +16,7 @@ import {
 } from "recharts";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getMonthlyOrders } from "../utils/getMonthlyOrders";
+import { getMonthlyOrders } from "../../utils/getMonthlyOrders";
 
 const COLORS = ["#6366F1", "#22C55E", "#EF4444"];
 
