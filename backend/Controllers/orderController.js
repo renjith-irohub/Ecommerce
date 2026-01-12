@@ -40,7 +40,7 @@ export const createOrder = async (req, res) => {
 export const getMyOrders = async (req, res) => {
   try {
     const userId = req.user.id;
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    const orders = await Order.find({ userId }).populate("userId", "name email address").sort({ createdAt: -1 });
 
     res.json({
       success: true,
