@@ -8,7 +8,8 @@ export const addToCart = async (req, res) => {
       return res.status(400).json({ message: "Missing fields" });
     }
 
-    const existing = await Cart.findOne({ productId, size });
+    const userId = req.user.id;
+    const existing = await Cart.findOne({ productId, size, userId });
 
     if (existing) {
       existing.quantity += quantity || 1;
@@ -17,6 +18,7 @@ export const addToCart = async (req, res) => {
     }
 
     const newItem = await Cart.create({
+      userId,
       productId,
       name,
       price,
@@ -33,7 +35,8 @@ export const addToCart = async (req, res) => {
 
 export const getCart = async (req, res) => {
   try {
-    const cart = await Cart.find();
+    const userId = req.user.id;
+    const cart = await Cart.find({ userId });
     res.json({ cart });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -42,7 +45,8 @@ export const getCart = async (req, res) => {
 
 export const clearCart = async (req, res) => {
   try {
-    await Cart.deleteMany();
+    const userId = req.user.id;
+    await Cart.deleteMany({ userId });
     res.json({ message: "Cart cleared" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -56,13 +60,40 @@ export const updateQuantity = async (req, res) => {
     const item = await Cart.findById(id);
     if (!item) return res.status(404).json({ message: "Item not found" });
 
+    if (item.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to update this item" });
+    }
+
     if (action === "increase") item.quantity += 1;
-    if (action === "decrease" && item.quantity > 1) item.quantity -= 1;
+    if (action === "decrease") {
+      item.quantity -= 1;
+      if (item.quantity <= 0) {
+        await Cart.findByIdAndDelete(id);
+        return res.json({ message: "Item removed from cart" });
+      }
+    }
 
     await item.save();
     res.json({ message: "Quantity updated", item });
 
   } catch (err) {
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const removeItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const item = await Cart.findById(id);
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    if (item.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to remove this item" });
+    }
+
+    await Cart.findByIdAndDelete(id);
+    res.json({ message: "Item removed from cart" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

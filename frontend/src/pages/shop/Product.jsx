@@ -56,6 +56,10 @@ const Product = () => {
         image: product.images[0],
         size: selectedSize,
         quantity,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
     },
     onSuccess: () => {

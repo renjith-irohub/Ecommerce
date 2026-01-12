@@ -3,6 +3,7 @@ import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 
 
 function loadRazorpayScript(src) {
@@ -48,33 +49,49 @@ const CartPage = () => {
   const user = useSelector((state) => state.auth.user);
   const userId = user?.id;
 
- 
+
   const { data, isLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:5000/api/v1/cart/getcart");
+      const res = await axios.get("http://localhost:5000/api/v1/cart/getcart", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       return res.data;
     },
   });
-console.log(data);
+  console.log(data);
 
   const cart = data?.cart || [];
 
-  
+
   const clearCart = useMutation({
-    mutationFn: () => axios.delete("http://localhost:5000/api/v1/cart/clear"),
+    mutationFn: () => axios.delete("http://localhost:5000/api/v1/cart/clear", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }),
     onSuccess: () => queryClient.invalidateQueries(["cart"]),
   });
 
   const updateQuantity = useMutation({
     mutationFn: ({ id, action }) =>
-      axios.put(`http://localhost:5000/api/v1/cart/update/${id}`, { action }),
+      axios.put(`http://localhost:5000/api/v1/cart/update/${id}`, { action }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }),
     onSuccess: () => queryClient.invalidateQueries(["cart"]),
   });
 
   const removeItem = useMutation({
     mutationFn: (id) =>
-      axios.delete(`http://localhost:5000/api/v1/cart/remove/${id}`),
+      axios.delete(`http://localhost:5000/api/v1/cart/remove/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }),
     onSuccess: () => queryClient.invalidateQueries(["cart"]),
   });
 
@@ -82,7 +99,7 @@ console.log(data);
   const verifyMutation = useMutation({ mutationFn: verifyPayment });
   const placeOrderMutation = useMutation({ mutationFn: placeOrder });
 
- 
+
   const checkoutHandler = async () => {
     if (cart.length === 0) return alert("Cart empty!");
     if (!userId) return alert("Please login to continue");
@@ -110,21 +127,21 @@ console.log(data);
           const verifyRes = await verifyMutation.mutateAsync(response);
 
           if (verifyRes.message === "Payment successful") {
-           
-    
-            // !cart empty
-           await clearCart.mutateAsync(); 
 
-            
-            
-            navigate("/placeorder",{
-              state:{
-                success:true,
-                items:cart,
-                totalAmount:total,
-                paymentId:response.razorpay_payment_id,
-                orderId:response.razorpay_order_id,
-                userId:user._id,
+
+            // !cart empty
+            await clearCart.mutateAsync();
+
+
+
+            navigate("/placeorder", {
+              state: {
+                success: true,
+                items: cart,
+                totalAmount: total,
+                paymentId: response.razorpay_payment_id,
+                orderId: response.razorpay_order_id,
+                userId: user._id,
               },
             })
           }
@@ -165,11 +182,10 @@ console.log(data);
 
                   <div className="flex items-center gap-2 mt-2">
                     <button
-                      disabled={item.quantity <= 1}
                       onClick={() =>
                         updateQuantity.mutate({ id: item._id, action: "decrease" })
                       }
-                      className="px-3 py-1 bg-gray-300 rounded"
+                      className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition-colors"
                     >
                       -
                     </button>
@@ -180,12 +196,24 @@ console.log(data);
                       onClick={() =>
                         updateQuantity.mutate({ id: item._id, action: "increase" })
                       }
-                      className="px-3 py-1 bg-gray-300 rounded"
+                      className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition-colors"
                     >
                       +
                     </button>
                   </div>
                 </div>
+
+                <button
+                  onClick={() => {
+                    if (window.confirm("Remove this item from cart?")) {
+                      removeItem.mutate(item._id);
+                    }
+                  }}
+                  className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                  title="Remove item"
+                >
+                  <Trash2 size={20} />
+                </button>
               </div>
             ))}
           </div>
