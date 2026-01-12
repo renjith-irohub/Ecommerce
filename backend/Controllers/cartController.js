@@ -3,6 +3,7 @@ import Cart from "../models/cartModel.js";
 export const addToCart = async (req, res) => {
   try {
     const { productId, name, price, image, size, quantity } = req.body;
+console.log(req.body);
 
     if (!productId || !name || !price) {
       return res.status(400).json({ message: "Missing fields" });
