@@ -3,6 +3,7 @@ import crypto from "crypto";
 import Payment from "../models/paymentModel.js";
 import Order from "../models/orderModel.js";
 import Product from "../models/productModel.js";
+import Cart from "../models/cartModel.js";
 import "dotenv/config";
 
 const razorpay = new Razorpay({
@@ -18,9 +19,22 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
-    const amount =
-      cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) *
-      100;
+    let totalAmount = 0;
+    for (const item of cartItems) {
+      const product = await Product.findById(item.productId);
+      if (product) {
+        // Use discount price if it exists, otherwise use regular price
+        const currentPrice = (product.discount > 0 && product.discount < product.price)
+          ? product.discount
+          : product.price;
+        totalAmount += currentPrice * item.quantity;
+      } else {
+        // Fallback to the price sent from cart if product not found
+        totalAmount += item.price * item.quantity;
+      }
+    }
+
+    const amount = totalAmount * 100;
 
     const options = {
       amount,
@@ -83,9 +97,12 @@ export const verifyPayment = async (req, res) => {
       status: "Paid",
     });
 
+    // Clear user's cart after successful payment
+    await Cart.deleteMany({ userId: payment.userId });
+
     for (const item of payment.products) {
       await Product.findByIdAndUpdate(item.productId, {
-        $inc: { soldCount: item.quantity },
+        $inc: { soldcount: item.quantity },
       });
     }
 

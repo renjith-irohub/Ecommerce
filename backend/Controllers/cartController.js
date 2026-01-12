@@ -1,9 +1,10 @@
 import Cart from "../models/cartModel.js";
+import Product from "../models/productModel.js";
 
 export const addToCart = async (req, res) => {
   try {
-    const { productId, name, price, image, size, quantity } = req.body;
-console.log(req.body);
+    const { productId, name, price, image, size, quantity, discount } = req.body;
+
 
     if (!productId || !name || !price) {
       return res.status(400).json({ message: "Missing fields" });
@@ -21,12 +22,14 @@ console.log(req.body);
     const newItem = await Cart.create({
       userId,
       productId,
+      discount,
       name,
       price,
       image,
       size,
       quantity: quantity || 1,
     });
+    console.log("newitem", newItem);
 
     res.json({ message: "Added to cart", cart: newItem });
   } catch (err) {
@@ -37,7 +40,22 @@ console.log(req.body);
 export const getCart = async (req, res) => {
   try {
     const userId = req.user.id;
-    const cart = await Cart.find({ userId });
+    const cartItems = await Cart.find({ userId });
+
+    // Populate live prices from Product model
+    const cart = await Promise.all(cartItems.map(async (item) => {
+      const product = await Product.findById(item.productId);
+      if (product) {
+        return {
+          ...item._doc,
+          price: (product.discount > 0 && product.discount < product.price) ? product.discount : product.price,
+          originalPrice: product.price,
+          isDiscounted: product.discount > 0 && product.discount < product.price
+        };
+      }
+      return item;
+    }));
+
     res.json({ cart });
   } catch (err) {
     res.status(500).json({ message: err.message });
